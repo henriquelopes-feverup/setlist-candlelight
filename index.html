@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setlist Candlelight</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #000, #1a1a1a);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  text-align: center;
+}
+button {
+  background: gold;
+  border: none;
+  padding: 15px 25px;
+  margin: 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #d4af37;
+}
+.hidden {
+  display: none;
+}
+ul {
+  text-align: left;
+  max-width: 400px;
+  margin: 20px auto;
+}
+.botoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.saiba {
+  background: #0b1f3a;
+  color: white;
+}
+.saiba:hover {
+  background: #132c55;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Candlelight</h1>
+  <p>Escolha uma setlist</p>
+
+  <div id="menu">
+    <button onclick="showSetlist('mix')">Coldplay + Imagine Dragons</button>
+    <button onclick="showSetlist('coldplay')">Coldplay</button>
+    <button onclick="showSetlist('vivaldi')">Vivaldi</button>
+    <button onclick="showSetlist('classicos')">Clássicos Atemporais</button>
+    <button onclick="showSetlist('taylor')">Taylor Swift</button>
+    <button onclick="showSetlist('linkin')">Linkin Park</button>
+    <button onclick="showSetlist('metallica')">Metallica</button>
+    <button onclick="showSetlist('adele')">Adele</button>
+  </div>
+
+  <div id="setlist" class="hidden">
+    <h2 id="title"></h2>
+    <ul id="list"></ul>
+
+    <div class="botoes">
+      <button onclick="voltar()">Voltar</button>
+      <a href="https://feverup.com/pt/sao-paulo/candlelight" target="_blank">
+        <button class="saiba">Saiba mais</button>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const setlists = {
+  mix: [
+    "Clocks - Coldplay",
+    "Something Just Like This - Coldplay",
+    "Thunder - Imagine Dragons",
+    "Adventure Of A Lifetime - Coldplay",
+    "Fix You - Coldplay",
+    "Natural - Imagine Dragons",
+    "Next To Me - Imagine Dragons",
+    "The Scientist - Coldplay",
+    "Follow You - Imagine Dragons",
+    "Bad Liar - Imagine Dragons",
+    "Strawberry Swing - Coldplay",
+    "Believer - Imagine Dragons",
+    "A Sky Full Of Stars - Coldplay",
+    "My Universe - Coldplay & BTS",
+    "Radioactive - Imagine Dragons",
+    "Viva La Vida - Coldplay"
+  ],
+  coldplay: [
+    "Fix You",
+    "Strawberry Swing",
+    "Yellow",
+    "The Scientist",
+    "Adventure Of A Lifetime",
+    "Something Just Like This",
+    "Green Eyes",
+    "In My Place",
+    "Lovers In Japan",
+    "Speed Of Sound",
+    "Talk",
+    "Hymn For The Weekend",
+    "Paradise",
+    "A Sky Full Of Stars",
+    "Clocks",
+    "Viva La Vida"
+  ],
+  vivaldi: [
+    "Primavera (Allegro, Largo, Allegro Pastorale)",
+    "Verão (Allegro non molto, Adagio-Presto, Presto)",
+    "Outono (Allegro, Adagio Molto, Allegro Molto)",
+    "Inverno (Allegro non molto, Largo, Allegro)"
+  ],
+  classicos: [
+    "Antonio Vivaldi (1678-1741)",
+    "The Four Seasons, Op. 8 No. 1, RV 269 Spring: I. Allegro",
+    "The Four Seasons, Op. 8 No. 2, RV 315 Summer: III. Presto",
+    "Johann Sebastian Bach (1685-1750)",
+    "Cello Suite No. 1 in G Major, BWV 1007: I. Prélude",
+    "Brandenburg Concerto No. 3 in G Major, BWV 1048: I. Allegro",
+    "Concerto for 2 Violins in D Minor, BWV 1043: I. Vivace",
+    "Wolfgang Amadeus Mozart (1756-1791)",
+    "Serenade No. 13 – Eine Kleine Nachtmusik: I. Allegro",
+    "II. Romance (Andante)",
+    "Requiem in D Minor, K.626: Lacrimosa",
+    "Ludwig van Beethoven (1770-1827)",
+    "Symphony No. 5 in C Minor, Op. 67: I. Allegro con brio",
+    "Pyotr Ilyich Tchaikovsky (1840-1893)",
+    "The Nutcracker, Op. 71: Miniature Overture",
+    "Claude Debussy (1862-1918)",
+    "Suite Bergamasque: Clair de Lune",
+    "Maurice Ravel (1875-1937)",
+    "String Quartet in F Major: Assez vif, très rythmé"
+  ],
+  taylor: [
+    "Love Story",
+    "Cardigan",
+    "Blank Space",
+    "Enchanted",
+    "Anti-Hero",
+    "Lavender Haze",
+    "Fortnight (ft. Post Malone)",
+    "All Too Well",
+    "We Are Never Ever Getting Back Together",
+    "Cruel Summer",
+    "But Daddy I Love Him",
+    "You Belong With Me",
+    "Shake It Off"
+  ],
+  linkin: [
+    "Somewhere I Belong",
+    "Lost",
+    "New Divide",
+    "Burn It Down",
+    "Faint",
+    "Crawling",
+    "Breaking the Habit",
+    "One Step Closer",
+    "What I've Done",
+    "Castle of Glass",
+    "Bleed It Out",
+    "The Emptiness Machine"
+  ],
+  metallica: [
+    "One",
+    "Enter Sandman",
+    "Fade to Black",
+    "The Unforgiven",
+    "Sad But True",
+    "Seek & Destroy",
+    "For Whom the Bell Tolls",
+    "Whiskey in the Jar",
+    "Master of Puppets",
+    "Nothing Else Matters"
+  ],
+  adele: [
+    "Chasing Pavements",
+    "Make You Feel My Love",
+    "Hometown Glory",
+    "Rolling In The Deep",
+    "Rumour Has It",
+    "Turning Tables",
+    "Set Fire To The Rain",
+    "One And Only",
+    "Someone Like You",
+    "Hello",
+    "All I Ask",
+    "When We Were Young",
+    "Send My Love (To Your New Lover)",
+    "Easy On Me"
+  ]
+};
+
+function showSetlist(tipo) {
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('setlist').classList.remove('hidden');
+
+  const list = document.getElementById('list');
+  list.innerHTML = "";
+
+  const titles = {
+    mix: 'Coldplay + Imagine Dragons',
+    coldplay: 'Coldplay',
+    vivaldi: 'Vivaldi - As Quatro Estações',
+    classicos: 'Clássicos Atemporais',
+    taylor: 'Taylor Swift',
+    linkin: 'Tributo a Linkin Park',
+    metallica: 'Tributo a Metallica',
+    adele: 'Tributo a Adele'
+  };
+
+  document.getElementById('title').innerText = titles[tipo];
+
+  setlists[tipo].forEach(item => {
+    const li = document.createElement('li');
+    li.innerText = item;
+    list.appendChild(li);
+  });
+}
+
+function voltar() {
+  document.getElementById('menu').classList.remove('hidden');
+  document.getElementById('setlist').classList.add('hidden');
+}
+</script>
+
+</body>
+</html>
