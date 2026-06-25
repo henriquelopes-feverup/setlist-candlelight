@@ -2,244 +2,81 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Setlist Candlelight</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Candlelight Programs</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, #000, #1a1a1a);
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.container {
-  text-align: center;
-}
-button {
-  background: gold;
-  border: none;
-  padding: 15px 25px;
-  margin: 10px;
-  font-size: 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background: #d4af37;
-}
-.hidden {
-  display: none;
-}
-ul {
-  text-align: left;
-  max-width: 400px;
-  margin: 20px auto;
-}
-.botoes {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-.saiba {
-  background: #0b1f3a;
-  color: white;
-}
-.saiba:hover {
-  background: #132c55;
-}
+:root{--gold:#c8a75a;--bg:#090909;--card:#141414;--line:#2d2d2d}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at top,#2b210d,#090909 35%);color:#fff}
+header{padding:48px 24px;text-align:center}
+h1{margin:8px 0;color:var(--gold);font-weight:300;letter-spacing:2px}
+p{color:#d8d8d8}
+.wrap{max-width:900px;margin:auto;padding:0 18px 40px}
+#search{width:100%;padding:15px 18px;border-radius:14px;border:1px solid #333;background:#121212;color:#fff;font-size:16px}
+.card{margin:14px 0;padding:18px 20px;border-radius:18px;background:linear-gradient(180deg,#191919,#111);border:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:.25s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.arrow{color:var(--gold);font-size:22px}
+.hidden{display:none}
+#detail{animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+button{margin:10px 0;background:none;color:var(--gold);border:1px solid var(--gold);padding:10px 18px;border-radius:24px;cursor:pointer}
+h2{color:var(--gold)}
+ol{padding-left:24px}
+li{padding:8px 0;border-bottom:1px solid #1e1e1e}
+footer{text-align:center;color:#999;padding:40px 0}
 </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>Candlelight</h1>
-  <p>Escolha uma setlist</p>
-
-  <div id="menu">
-    <button onclick="showSetlist('mix')">Coldplay + Imagine Dragons</button>
-    <button onclick="showSetlist('coldplay')">Coldplay</button>
-    <button onclick="showSetlist('vivaldi')">Vivaldi</button>
-    <button onclick="showSetlist('classicos')">Clássicos Atemporais</button>
-    <button onclick="showSetlist('taylor')">Taylor Swift</button>
-    <button onclick="showSetlist('linkin')">Linkin Park</button>
-    <button onclick="showSetlist('metallica')">Metallica</button>
-    <button onclick="showSetlist('adele')">Adele</button>
-  </div>
-
-  <div id="setlist" class="hidden">
-    <h2 id="title"></h2>
-    <ul id="list"></ul>
-
-    <div class="botoes">
-      <button onclick="voltar()">Voltar</button>
-      <a href="https://feverup.com/pt/sao-paulo/candlelight" target="_blank">
-        <button class="saiba">Saiba mais</button>
-      </a>
-    </div>
-
-  </div>
+<header><h1>Candlelight</h1><p>Tonight's Program</p></header>
+<div class="wrap">
+<div id="home">
+<input id="search" placeholder="Pesquisar concerto...">
+<div id="list"></div>
 </div>
-
+<div id="detail" class="hidden">
+<button id="backBtn">← Voltar</button>
+<h2 id="title"></h2>
+<ol id="songs"></ol>
+</div>
+<footer>Enjoy the concert</footer>
+</div>
 <script>
-const setlists = {
-  mix: [
-    "Clocks - Coldplay",
-    "Something Just Like This - Coldplay",
-    "Thunder - Imagine Dragons",
-    "Adventure Of A Lifetime - Coldplay",
-    "Fix You - Coldplay",
-    "Natural - Imagine Dragons",
-    "Next To Me - Imagine Dragons",
-    "The Scientist - Coldplay",
-    "Follow You - Imagine Dragons",
-    "Bad Liar - Imagine Dragons",
-    "Strawberry Swing - Coldplay",
-    "Believer - Imagine Dragons",
-    "A Sky Full Of Stars - Coldplay",
-    "My Universe - Coldplay & BTS",
-    "Radioactive - Imagine Dragons",
-    "Viva La Vida - Coldplay"
-  ],
-  coldplay: [
-    "Fix You",
-    "Strawberry Swing",
-    "Yellow",
-    "The Scientist",
-    "Adventure Of A Lifetime",
-    "Something Just Like This",
-    "Green Eyes",
-    "In My Place",
-    "Lovers In Japan",
-    "Speed Of Sound",
-    "Talk",
-    "Hymn For The Weekend",
-    "Paradise",
-    "A Sky Full Of Stars",
-    "Clocks",
-    "Viva La Vida"
-  ],
-  vivaldi: [
-    "Primavera (Allegro, Largo, Allegro Pastorale)",
-    "Verão (Allegro non molto, Adagio-Presto, Presto)",
-    "Outono (Allegro, Adagio Molto, Allegro Molto)",
-    "Inverno (Allegro non molto, Largo, Allegro)"
-  ],
-  classicos: [
-    "Antonio Vivaldi (1678-1741)",
-    "The Four Seasons, Op. 8 No. 1, RV 269 Spring: I. Allegro",
-    "The Four Seasons, Op. 8 No. 2, RV 315 Summer: III. Presto",
-    "Johann Sebastian Bach (1685-1750)",
-    "Cello Suite No. 1 in G Major, BWV 1007: I. Prélude",
-    "Brandenburg Concerto No. 3 in G Major, BWV 1048: I. Allegro",
-    "Concerto for 2 Violins in D Minor, BWV 1043: I. Vivace",
-    "Wolfgang Amadeus Mozart (1756-1791)",
-    "Serenade No. 13 – Eine Kleine Nachtmusik: I. Allegro",
-    "II. Romance (Andante)",
-    "Requiem in D Minor, K.626: Lacrimosa",
-    "Ludwig van Beethoven (1770-1827)",
-    "Symphony No. 5 in C Minor, Op. 67: I. Allegro con brio",
-    "Pyotr Ilyich Tchaikovsky (1840-1893)",
-    "The Nutcracker, Op. 71: Miniature Overture",
-    "Claude Debussy (1862-1918)",
-    "Suite Bergamasque: Clair de Lune",
-    "Maurice Ravel (1875-1937)",
-    "String Quartet in F Major: Assez vif, très rythmé"
-  ],
-  taylor: [
-    "Love Story",
-    "Cardigan",
-    "Blank Space",
-    "Enchanted",
-    "Anti-Hero",
-    "Lavender Haze",
-    "Fortnight (ft. Post Malone)",
-    "All Too Well",
-    "We Are Never Ever Getting Back Together",
-    "Cruel Summer",
-    "But Daddy I Love Him",
-    "You Belong With Me",
-    "Shake It Off"
-  ],
-  linkin: [
-    "Somewhere I Belong",
-    "Lost",
-    "New Divide",
-    "Burn It Down",
-    "Faint",
-    "Crawling",
-    "Breaking the Habit",
-    "One Step Closer",
-    "What I've Done",
-    "Castle of Glass",
-    "Bleed It Out",
-    "The Emptiness Machine"
-  ],
-  metallica: [
-    "One",
-    "Enter Sandman",
-    "Fade to Black",
-    "The Unforgiven",
-    "Sad But True",
-    "Seek & Destroy",
-    "For Whom the Bell Tolls",
-    "Whiskey in the Jar",
-    "Master of Puppets",
-    "Nothing Else Matters"
-  ],
-  adele: [
-    "Chasing Pavements",
-    "Make You Feel My Love",
-    "Hometown Glory",
-    "Rolling In The Deep",
-    "Rumour Has It",
-    "Turning Tables",
-    "Set Fire To The Rain",
-    "One And Only",
-    "Someone Like You",
-    "Hello",
-    "All I Ask",
-    "When We Were Young",
-    "Send My Love (To Your New Lover)",
-    "Easy On Me"
-  ]
+const data={"Trilhas Sonoras de Filmes Mágicos": ["Tale As Old As Time – A Bela e a Fera", "Once Upon a December – Anastasia", "Bibbidi-Bobbidi-Boo – Cinderela", "Hallelujah – Shrek", "Hedwig's Theme – Harry Potter", "Let It Go – Frozen", "Romantic Flight – Como Treinar o Seu Dragão", "How Far I'll Go – Moana", "A Part of Your World – A Pequena Sereia", "You'll Be in My Heart – Tarzan", "Can You Feel the Love Tonight – O Rei Leão", "A Whole New World – Aladdin", "Medley Disney", "Whistle While You Work / Heigh-Ho – Branca de Neve", "I'll Make a Man Out of You – Mulan", "Once Upon a Dream – A Bela Adormecida", "Alice's Theme – Alice no País das Maravilhas", "Zero to Hero – Hércules"], "Coldplay & Imagine Dragons": ["Clocks", "Radioactive", "Adventure of a Lifetime", "Fix You", "Eyes Closed", "Nice to Meet You", "The Scientist", "Feelslikeimfallinginlove", "Follow You", "Bad Liar", "Believer", "A Sky Full of Stars", "Viva La Vida"], "Tributo a Linkin Park": ["Numb", "Somewhere I Belong", "Lost", "New Divide", "Burn It Down", "Faint", "Crawling", "Breaking the Habit", "One Step Closer", "What I've Done", "Castle of Glass", "Bleed It Out", "The Emptiness Machine"], "O Senhor dos Anéis": ["Prologue: One Ring to Rule Them All", "Concerning Hobbits", "Amon Hen", "The Breaking of the Fellowship", "Foundations of Stone", "The Riders of Rohan", "Evenstar", "Gollum's Song", "Minas Tirith", "The Ride of the Rohirrim", "The Return of the King", "Into the West", "The Grey Havens"], "Os Clássicos do Rock": ["Another Brick in the Wall", "Cryin'", "Enter Sandman", "Nothing Else Matters", "Livin' on a Prayer", "Penny Lane", "Satisfaction", "Smells Like Teen Spirit", "Smoke on the Water", "Stairway to Heaven", "Sweet Child O' Mine", "Times Like These", "Queen Medley"], "Vivaldi, As Quatro Estações": ["Primavera", "Verão", "Outono", "Inverno"], "Mozart & Beethoven": ["Eine kleine Nachtmusik", "Marriage of Figaro", "The Magic Flute", "Symphony No.40", "Lacrimosa", "String Quartet No.4", "Symphony No.5", "Turkish March", "Symphony No.7", "Symphony No.9"], "Tributo a Adele": ["Chasing Pavements", "Make You Feel My Love", "Hometown Glory", "Rolling in the Deep", "Rumour Has It", "Turning Tables", "Set Fire to the Rain", "One and Only", "Someone Like You", "Hello", "All I Ask", "When We Were Young", "Send My Love", "Easy on Me"], "Tributo a Rush": ["Tom Sawyer", "Limelight", "The Spirit of Radio", "Closer to the Heart", "Working Man", "YYZ", "Subdivisions", "Freewill", "La Villa Strangiato", "Time Stand Still"], "Tributo a Bruno Mars": ["Marry You", "Just the Way You Are", "Leave the Door Open", "Uptown Funk", "The Lazy Song", "Versace on the Floor", "Grenade", "Finesse", "Smokin' Out the Window", "Locked Out of Heaven", "Talking to the Moon", "That's What I Like", "When I Was Your Man", "Treasure"], "O Melhor de Hans Zimmer": ["Time", "This Land", "Zooster's Breakout", "Supermarine", "Honor", "A Dark Knight", "Wonder Woman Suite", "Gladiator Suite", "Cornfield Chase", "Dune Suite", "Discombobulate", "Pirates of the Caribbean Suite"], "Coldplay & Ed Sheeran": ["Clocks", "Something Just Like This", "Bad Habits", "Adventure of a Lifetime", "Fix You", "Photograph", "The Scientist", "Feelslikeimfallinginlove", "Shivers", "Perfect", "Viva la Vida", "Give Me Love", "A Sky Full of Stars"], "Queen & ABBA": ["Dancing Queen", "SOS", "Money, Money, Money", "Voulez-Vous", "Bohemian Rhapsody", "I Want to Break Free", "Killer Queen", "Waterloo", "Super Trouper", "Mamma Mia", "Don't Stop Me Now", "We Will Rock You", "We Are the Champions", "Gimme! Gimme! Gimme!"]};
+const list=document.getElementById('list');
+const home=document.getElementById('home');
+const detail=document.getElementById('detail');
+const title=document.getElementById('title');
+const songs=document.getElementById('songs');
+const search=document.getElementById('search');
+
+function render(filter=''){
+ list.innerHTML='';
+ Object.keys(data)
+ .filter(n=>n.toLowerCase().includes(filter.toLowerCase()))
+ .forEach(name=>{
+   const card=document.createElement('div');
+   card.className='card';
+   card.innerHTML=`<strong>${name}</strong><span class="arrow">›</span>`;
+   card.addEventListener('click',()=>openConcert(name));
+   list.appendChild(card);
+ });
+}
+
+function openConcert(name){
+ home.classList.add('hidden');
+ detail.classList.remove('hidden');
+ title.textContent=name;
+ songs.innerHTML=data[name].map(m=>`<li>${m}</li>`).join('');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('backBtn').onclick=()=>{
+ detail.classList.add('hidden');
+ home.classList.remove('hidden');
 };
 
-function showSetlist(tipo) {
-  document.getElementById('menu').classList.add('hidden');
-  document.getElementById('setlist').classList.remove('hidden');
-
-  const list = document.getElementById('list');
-  list.innerHTML = "";
-
-  const titles = {
-    mix: 'Coldplay + Imagine Dragons',
-    coldplay: 'Coldplay',
-    vivaldi: 'Vivaldi - As Quatro Estações',
-    classicos: 'Clássicos Atemporais',
-    taylor: 'Taylor Swift',
-    linkin: 'Tributo a Linkin Park',
-    metallica: 'Tributo a Metallica',
-    adele: 'Tributo a Adele'
-  };
-
-  document.getElementById('title').innerText = titles[tipo];
-
-  setlists[tipo].forEach(item => {
-    const li = document.createElement('li');
-    li.innerText = item;
-    list.appendChild(li);
-  });
-}
-
-function voltar() {
-  document.getElementById('menu').classList.remove('hidden');
-  document.getElementById('setlist').classList.add('hidden');
-}
+search.addEventListener('input',e=>render(e.target.value));
+render();
 </script>
-
 </body>
 </html>
